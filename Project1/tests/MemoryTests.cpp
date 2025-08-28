@@ -1,5 +1,6 @@
 #include "CppUTest/TestHarness.h" 
 #include "../include/memory.h"
+#include "../include/disk.h"
 
 
 TEST_GROUP(MemoryTests)
@@ -42,3 +43,35 @@ TEST(MemoryTests, WriteOPCodeAndData)
     CHECK_EQUAL(15, data_read[ARG_IDX]);
 }
 
+TEST_GROUP(DiskTests) { 
+    void setup() { 
+        // Clear memory & set to sentinel value -1 just for unit tests
+        memset(memory, -1, sizeof(memory));
+    }
+    
+    void teardown() { 
+
+    }
+
+};
+
+
+TEST(DiskTests, InstructionNoArgs) { 
+
+    // Example program 
+    // exit 
+    const char* test_instruction = "exit"; 
+
+    int* translated_instruction = translate(test_instruction);
+    
+    int expected_opcode = 0;
+    int expected_arg    = -1; // Sentinel value
+
+    int addr = 4;
+    mem_write(addr, translated_instruction);
+    int* data_read = mem_read(addr);
+
+    CHECK_EQUAL(expected_opcode, data_read[OPCODE_IDX]);
+    CHECK_EQUAL(expected_arg,    data_read[ARG_IDX]);  
+
+}

@@ -8,7 +8,7 @@ LDLIBS   = -L$(CPPUTEST_HOME)/lib -lCppUTest -lCppUTestExt
 # Test sources (C++)
 TEST_SRCS = AllTests.cpp MemoryTests.cpp
 # Production sources (C)
-SRC_SRCS  = ../src/memory.c
+SRC_SRCS  = ../src/memory.c ../src/disk.c 
 
 # Objects
 TEST_OBJS = $(TEST_SRCS:%.cpp=build/%.o)
