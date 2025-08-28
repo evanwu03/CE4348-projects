@@ -10,7 +10,7 @@ enum { OPCODE_IDX = 0, ARG_IDX = 1};
 extern int memory[MEM_SIZE][MEM_FIELDS];
 
 // Function Prototypes 
-int* mem_read(int addr); 
-void mem_write(int addr, int* data);
+int* mem_read(const int addr); 
+void mem_write(const int addr, const int* data);
 
 #endif // MEMORY_H

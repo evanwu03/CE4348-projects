@@ -30,14 +30,15 @@ TEST(MemoryTests, ReadDataFromMemory)
 }
 
 
-TEST(MemoryTests, WriteDataToMemory) 
-{   
-    int data = 15; 
+TEST(MemoryTests, WriteOPCodeAndData) 
+{ 
+    int data[MEM_FIELDS] = {1, 15};
     int addr = 0;
-    mem_write(addr, &data);
-    int* data_frame = mem_read(addr);
+    mem_write(addr, data);
 
-    // Check if data was successfully written
-    CHECK_EQUAL(data, data_frame[ARG_IDX]);
+    int* data_read = mem_read(addr);
+
+    CHECK_EQUAL(1, data_read[OPCODE_IDX]);
+    CHECK_EQUAL(15, data_read[ARG_IDX]);
 }
 
