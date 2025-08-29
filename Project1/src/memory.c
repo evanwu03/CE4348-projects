@@ -14,7 +14,6 @@ mem_status_t mem_read(const int addr, Instruction* const instr){
     return MEM_OK;
 }
 
-// Precondition: data must point to an array of MEM_FIELDS ints (opcode, arg)
 mem_status_t mem_write(const int addr, const Instruction* const instr){
     if(!instr) return MEM_ERR_NULL; 
 
