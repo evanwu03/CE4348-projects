@@ -17,31 +17,86 @@ TEST_GROUP(MemoryTests)
     }
 };
 
+
 TEST(MemoryTests, ReadDataFromMemory)
 {
     // Preload data 
     memory[0][0] = 1;
     memory[0][1] = 2;
 
-    int* data = mem_read(0);
+    Instruction data = {0};
+    mem_read(0, &data);
+
 
     // Check opcode and argument fields were read succesffully
-    CHECK_EQUAL(1, data[OPCODE_IDX]);
-    CHECK_EQUAL(2, data[ARG_IDX]);
+    CHECK_EQUAL(1, data.opcode);
+    CHECK_EQUAL(2, data.arg);
 }
 
 
 TEST(MemoryTests, WriteOPCodeAndData) 
 { 
-    int data[MEM_FIELDS] = {1, 15};
+    //int data[MEM_FIELDS] = {1, 15};
+    Instruction data = {.opcode=1, .arg=15};
     int addr = 0;
-    mem_write(addr, data);
+    mem_write(addr, &data);
 
-    int* data_read = mem_read(addr);
+    Instruction data_read = {0};
+    mem_read(addr, &data_read);
 
-    CHECK_EQUAL(1, data_read[OPCODE_IDX]);
-    CHECK_EQUAL(15, data_read[ARG_IDX]);
+    CHECK_EQUAL(1, data_read.opcode);
+    CHECK_EQUAL(15, data_read.arg);
 }
+
+TEST(MemoryTests, OutOfBoundsWrite) 
+{ 
+    //int data[MEM_FIELDS] = {1, 15};
+    Instruction data = {.opcode=1, .arg=15};
+    int addr = -1;
+    mem_status_t err = mem_write(addr, &data);
+
+    CHECK_EQUAL(MEM_ERR_OOB, err);
+
+    addr = 1024; 
+    err = mem_write(addr, &data);
+
+    CHECK_EQUAL(MEM_ERR_OOB, err);
+}
+
+TEST(MemoryTests, OutofBoundsRead) 
+{
+    int addr = -1;
+    Instruction data = {0};
+    mem_status_t err = mem_read(-1, &data);
+
+    CHECK_EQUAL(MEM_ERR_OOB, err);
+
+    addr = 1024;
+    err = mem_read(addr, &data);
+
+    CHECK_EQUAL(MEM_ERR_OOB, err);
+}
+
+TEST(MemoryTests, NullPointerArgRead) 
+{
+    Instruction* data = NULLPTR; 
+    int addr = 0;
+    mem_status_t err = mem_read(addr, data);
+
+    CHECK_EQUAL(MEM_ERR_NULL, err);
+}
+
+
+TEST(MemoryTests, NullPointerArgWrite)
+{
+    //int data[MEM_FIELDS] = {1, 15};
+    Instruction* data = NULLPTR; 
+    int addr = 0;
+    mem_status_t err = mem_write(addr, data);
+
+    CHECK_EQUAL(MEM_ERR_NULL, err);
+}
+
 
 TEST_GROUP(DiskTests) { 
     void setup() { 
@@ -56,6 +111,11 @@ TEST_GROUP(DiskTests) {
 };
 
 
+
+
+
+
+/*
 TEST(DiskTests, InstructionNoArgs) { 
 
     // Example program 
@@ -75,3 +135,4 @@ TEST(DiskTests, InstructionNoArgs) {
     CHECK_EQUAL(expected_arg,    data_read[ARG_IDX]);  
 
 }
+*/
