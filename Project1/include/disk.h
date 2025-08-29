@@ -1,6 +1,7 @@
 #ifndef DISK_H
 #define DISK_H 
 
+#include "memory.h"
 
 typedef struct { 
     const char *mnemonic;
