@@ -100,8 +100,8 @@ TEST(MemoryTests, NullPointerArgWrite)
 
 TEST_GROUP(DiskTests) { 
     void setup() { 
-        // Clear memory & set to sentinel value -1 just for unit tests
-        memset(memory, -1, sizeof(memory));
+        // Clear memory & set to sentinel value 0 just for unit tests
+        memset(memory, 0, sizeof(memory));
     }
     
     void teardown() { 
@@ -112,24 +112,49 @@ TEST_GROUP(DiskTests) {
 
 
 
-/*
-TEST(DiskTests, InstructionNoArgs) { 
+TEST(DiskTests, InstructionNoArgsExit) { 
 
-    // Example program 
+    // Example program
     // exit 
-    const char* test_instruction = "exit"; 
 
-    int* translated_instruction = translate(test_instruction);
+    char test_instruction[] = "exit"; 
     
     int expected_opcode = 0;
-    int expected_arg    = -1; // Sentinel value
-
+    int expected_arg    = 0; // Sentinel value
     int addr = 4;
-    mem_write(addr, translated_instruction);
-    int* data_read = mem_read(addr);
 
-    CHECK_EQUAL(expected_opcode, data_read[OPCODE_IDX]);
-    CHECK_EQUAL(expected_arg,    data_read[ARG_IDX]);  
+
+    Instruction translated_instruction = translate(test_instruction);
+    mem_write(addr, &translated_instruction);
+
+    Instruction data = {0};
+    mem_read(addr, &data); 
+    
+    CHECK_EQUAL(expected_opcode, data.opcode);
+    CHECK_EQUAL(expected_arg,    data.arg);  
 
 }
-*/
+
+TEST(DiskTests, LoadConst) { 
+
+    // Example program
+    // load_const 50
+
+    char test_instruction[] = "load_const 50\r\n"; 
+    
+    int expected_opcode = LOAD_CONST;
+    int expected_arg    = 50; // Sentinel value
+    int addr = 4;
+
+
+    Instruction translated_instruction = translate(test_instruction);
+    mem_write(addr, &translated_instruction);
+
+    Instruction data = {0};
+    mem_read(addr, &data); 
+    
+    CHECK_EQUAL(expected_opcode, data.opcode);
+    CHECK_EQUAL(expected_arg,    data.arg);  
+
+}
+

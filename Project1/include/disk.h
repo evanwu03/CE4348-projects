@@ -26,7 +26,7 @@ typedef enum {
     SLEEP
 } opcode_t;
 
-void load_program(const char* fname, const int addr); 
+void load_program(const char* fname, int addr); 
 Instruction  translate(char* instruction);
 
-#endif DISK_H 
+#endif //DISK_H 
