@@ -7,7 +7,7 @@
 
 
 
-static const BUF_SIZE = 256;
+static const int BUF_SIZE = 256;
 
 static const InstructionInfo InstrTable[] = 
 {

@@ -6,7 +6,7 @@
 typedef struct { 
     const char *mnemonic;
     int opcode; 
-    int num_args;
+    unsigned int num_args;
 } InstructionInfo;
 
 typedef enum { 
