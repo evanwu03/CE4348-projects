@@ -35,6 +35,7 @@ load_status_t load_program(const char *fname, int addr)
     FILE *fptr = fopen(fname, "r");
 
     char line[BUF_SIZE];
+    int program_counter = addr; 
 
     // Check if it's a valid file
     if (!fptr)
@@ -44,25 +45,19 @@ load_status_t load_program(const char *fname, int addr)
     }
 
     // While there are still instructions in the file
-    while (fgets(line, BUF_SIZE, fptr) && addr < MEM_SIZE)
+    while (fgets(line, BUF_SIZE, fptr) && program_counter < MEM_SIZE)
     {
 
         // Strip any text after first instance of a comment
         char *comment = strstr(line, "//");
-        if (comment)
-        {
-            *comment = '\0';
-        }
+        if (comment) *comment = '\0';
 
         // strip any whitespace from line
         line[strcspn(line, "\r\n")] = 0;
 
         // If line is empty after processing then ignore
-        if (line[0] == '\0')
-        {
-            continue;
-        }
-
+        if (line[0] == '\0') continue;
+    
         Instruction instr = {0};
         translate_status_t err = translate(line, &instr);
 
@@ -73,9 +68,9 @@ load_status_t load_program(const char *fname, int addr)
             return LOAD_ERR;
         }
 
-        mem_write(addr, &instr);
+        mem_write(program_counter, &instr);
 
-        addr++;
+        program_counter++;
     }
 
     fclose(fptr);
