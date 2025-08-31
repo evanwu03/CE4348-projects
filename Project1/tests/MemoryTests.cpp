@@ -124,7 +124,8 @@ TEST(DiskTests, InstructionNoArgsExit) {
     int addr = 4;
 
 
-    Instruction translated_instruction = translate(test_instruction);
+    Instruction translated_instruction = {0};
+    translate(test_instruction, &translated_instruction);
     mem_write(addr, &translated_instruction);
 
     Instruction data = {0};
@@ -146,8 +147,9 @@ TEST(DiskTests, LoadConst) {
     int expected_arg    = 50; // Sentinel value
     int addr = 4;
 
+    Instruction translated_instruction = {0};
 
-    Instruction translated_instruction = translate(test_instruction);
+    translate(test_instruction, &translated_instruction);
     mem_write(addr, &translated_instruction);
 
     Instruction data = {0};
@@ -201,8 +203,28 @@ TEST(DiskTests, ProgramLoadBadArguments) {
     const char fname[] = "../programs/bad_arguments.txt";
     int addr = 4;
 
-    
-    load_program(fname,addr);
 
+    load_status_t err = load_program(fname,addr);
 
+    CHECK_EQUAL((int)LOAD_ERR, err);
+}
+
+TEST(DiskTests, ProgramUnexpectedArgs) {
+
+    const char fname[] = "../programs/unexpected_arguments.txt";
+    int addr = 4;
+
+    load_status_t err = load_program(fname,addr);
+
+    CHECK_EQUAL((int)LOAD_ERR, err);
+}
+
+TEST(DiskTests, ProgramUnknownInstruction) {
+
+    const char fname[] = "../programs/unknown_instruction.txt";
+    int addr = 4;
+
+    load_status_t err = load_program(fname,addr);
+
+    CHECK_EQUAL((int)LOAD_ERR, err);
 }

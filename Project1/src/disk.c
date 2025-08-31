@@ -28,7 +28,7 @@ static const InstructionInfo InstrTable[] =
 };
 
 // Opens program .txt file, translates instructions line by line and stores it in OS memory
-void load_program(const char *fname, int addr)
+load_status_t load_program(const char *fname, int addr)
 {
 
     // Open program file
@@ -40,7 +40,7 @@ void load_program(const char *fname, int addr)
     if (!fptr)
     {
         fprintf(stderr, "File was not found: %s\n", fname);
-        exit(EXIT_FAILURE);
+        return LOAD_ERR; // Might be more expressive
     }
 
     // While there are still instructions in the file
@@ -54,7 +54,6 @@ void load_program(const char *fname, int addr)
             *comment = '\0';
         }
 
-
         // strip any whitespace from line
         line[strcspn(line, "\r\n")] = 0;
 
@@ -64,7 +63,15 @@ void load_program(const char *fname, int addr)
             continue;
         }
 
-        Instruction instr = translate(line);
+        Instruction instr = {0};
+        translate_status_t err = translate(line, &instr);
+
+        if (err != TR_OK)
+        {
+
+            // print other diagnostic info here probably
+            return LOAD_ERR;
+        }
 
         mem_write(addr, &instr);
 
@@ -72,10 +79,11 @@ void load_program(const char *fname, int addr)
     }
 
     fclose(fptr);
+    return LOAD_OK;
 }
 
 // Translates a single instruction into (int opcode, int arg)
-Instruction translate(char *instruction)
+translate_status_t translate(char *instruction, Instruction *outInstr)
 {
 
     // Tokenize opcode and argument
@@ -85,7 +93,7 @@ Instruction translate(char *instruction)
     const InstructionInfo *instrPtr = 0;
 
     // Look up opcode in the Instruction LUT
-    for (int i = 0; i < sizeof(InstrTable) / sizeof(InstrTable[0]); i++)
+    for (size_t i = 0, n = ARRAY_LEN(InstrTable); i < n; i++)
     {
 
         if (strcmp(opcode, InstrTable[i].mnemonic) == 0)
@@ -100,21 +108,20 @@ Instruction translate(char *instruction)
     if (!instrPtr)
     {
         fprintf(stderr, "Error: Unknown instruction %s\n", opcode);
-        exit(EXIT_FAILURE);
+        return TR_UNKNOWN_INSTR;
     }
 
-    // For now let's naively assume the number of args is correct
     int opcode_num = instrPtr->opcode;
     int arg_num;
 
     if (instrPtr->num_args > 0)
     {
         // Again need a better way to log errors before just exiting
-        if(!string_is_number(arg)) 
+        if (!string_is_number(arg))
         {
-          fprintf(stderr, "Error: Argument %s is not numeric\n", arg);    
-          exit(EXIT_FAILURE);
-        }   
+            fprintf(stderr, "Error: Argument %s is not numeric\n", arg);
+            return TR_ARG_NOT_NUMERIC;
+        }
 
         arg_num = atoi(arg); // Convert argument into integer
     }
@@ -122,30 +129,36 @@ Instruction translate(char *instruction)
     {
 
         // If there more than 0 arguments detected then return an error
-        if(arg) { 
-            fprintf(stderr, "More than 0 arguments detected");
-            exit(EXIT_FAILURE);
+        if (arg)
+        {
+            fprintf(stderr, "More than arguments than expected\n");
+            return TR_UNEXPECTED_ARG;
         }
 
         arg_num = 0; // Default value for arg field
     }
 
-    Instruction result = {.opcode = opcode_num, .arg = arg_num};
-    return result;
+    outInstr->opcode = opcode_num;
+    outInstr->arg = arg_num;
+
+    return TR_OK;
 }
 
-static bool string_is_number(const char* str) { 
+static bool string_is_number(const char *str)
+{
 
-    if (str[0] == '\0' ) return false; 
+    if (str[0] == '\0')
+        return false;
 
-    if (*str == '+' || *str == '-') str++; //check for + or - signs
+    if (*str == '+' || *str == '-')
+        str++; // check for + or - signs
 
-    
-    while(*str) { 
-        if(!isdigit((unsigned char)*str)) return false;
+    while (*str)
+    {
+        if (!isdigit((unsigned char)*str))
+            return false;
         str++;
-    } 
-    
-    return true;
+    }
 
+    return true;
 }

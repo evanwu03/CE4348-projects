@@ -3,6 +3,8 @@
 
 #include "memory.h"
 
+#define ARRAY_LEN(a) (sizeof(a) / sizeof((a)[0]))
+
 typedef struct { 
     const char *mnemonic;
     int opcode; 
@@ -27,8 +29,21 @@ typedef enum {
 } opcode_t;
 
 
-void load_program(const char* fname, int addr); 
-Instruction  translate(char* instruction);
+typedef enum { 
+    TR_OK = 0,
+    TR_UNKNOWN_INSTR,
+    TR_ARG_NOT_NUMERIC,
+    TR_UNEXPECTED_ARG
+} translate_status_t;
+
+typedef enum{ 
+    LOAD_OK = 0,
+    LOAD_ERR 
+} load_status_t;
+
+
+load_status_t load_program(const char* fname, int addr); 
+translate_status_t  translate(char* instruction, Instruction* outInstr);
 static bool string_is_number(const char* str);
 
 #endif //DISK_H 
