@@ -1,0 +1,2 @@
+
+load_const 250f // "250f" is not a valid argument for load_const because it is not numeric

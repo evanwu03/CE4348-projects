@@ -140,7 +140,7 @@ TEST(DiskTests, LoadConst) {
     // Example program
     // load_const 50
 
-    char test_instruction[] = "load_const 50\r\n"; 
+    char test_instruction[] = "\tload_const 50\t\r\n"; 
     
     int expected_opcode = LOAD_CONST;
     int expected_arg    = 50; // Sentinel value
@@ -158,3 +158,51 @@ TEST(DiskTests, LoadConst) {
 
 }
 
+TEST(DiskTests, ProgramWithEmptyLines) { 
+
+    const char fname[] = "../programs/empty_lines.txt";
+    int addr = 4;
+
+    load_program(fname, addr);
+
+    Instruction instr1 = {0};
+    Instruction instr2 = {0};
+
+    mem_read(addr, &instr1);
+    mem_read(addr+1, &instr2);
+
+    CHECK_EQUAL(1, instr1.opcode); // load_const 250
+    CHECK_EQUAL(250, instr1.arg);
+    CHECK_EQUAL(0, instr2.opcode); // exit
+    CHECK_EQUAL(0, instr2.arg);
+}
+
+TEST(DiskTests, ProgramWithInlineComments) { 
+
+    const char fname[] = "../programs/inline_comments.txt";
+    int addr = 4;
+
+    load_program(fname, addr);
+
+    Instruction instr1 = {0};
+    Instruction instr2 = {0};
+
+    mem_read(addr, &instr1);
+    mem_read(addr+1, &instr2);
+
+    CHECK_EQUAL(1, instr1.opcode); // load_const 250
+    CHECK_EQUAL(250, instr1.arg);
+    CHECK_EQUAL(0, instr2.opcode); // exit
+    CHECK_EQUAL(0, instr2.arg);
+}
+
+TEST(DiskTests, ProgramLoadBadArguments) { 
+    
+    const char fname[] = "../programs/bad_arguments.txt";
+    int addr = 4;
+
+    
+    load_program(fname,addr);
+
+
+}

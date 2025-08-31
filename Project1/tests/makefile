@@ -3,6 +3,7 @@ CPPUTEST_HOME = /usr/share/cpputest
 
 CFLAGS   = -Wall -g -I../include
 CPPFLAGS = -I$(CPPUTEST_HOME)/include 
+
 LDLIBS   = -L$(CPPUTEST_HOME)/lib -lCppUTest -lCppUTestExt
 
 # Test sources (C++)

@@ -26,7 +26,9 @@ typedef enum {
     SLEEP
 } opcode_t;
 
+
 void load_program(const char* fname, int addr); 
 Instruction  translate(char* instruction);
+static bool string_is_number(const char* str);
 
 #endif //DISK_H 

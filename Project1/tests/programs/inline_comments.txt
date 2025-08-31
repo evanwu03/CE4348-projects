@@ -1,0 +1,6 @@
+
+// This program loads an constant to AC then exits 
+
+load_const 250 // 250->AC This comment should be ignored
+
+exit
