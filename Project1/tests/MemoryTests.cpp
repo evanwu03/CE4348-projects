@@ -228,3 +228,24 @@ TEST(DiskTests, ProgramUnknownInstruction) {
 
     CHECK_EQUAL((int)LOAD_ERR, err);
 }
+
+
+// Testing if the sample programs given will load into memory correctly 
+TEST(DiskTests, LoadProgramAdd) { 
+    const char fname[] = "../programs/program_add.txt";
+    int addr = 4;
+
+    load_status_t err = load_program(fname,addr);
+
+    CHECK_EQUAL((int)LOAD_OK, err);
+
+}
+
+TEST(DiskTests, LoadProgramIf) { 
+    const char fname[] = "../programs/program_if.txt";
+    int addr = 4;
+
+    load_status_t err = load_program(fname,addr);
+
+    CHECK_EQUAL((int)LOAD_OK, err);
+}
