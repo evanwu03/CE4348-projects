@@ -237,6 +237,14 @@ TEST(DiskTests, LoadProgramAdd) {
 
     load_status_t err = load_program(fname,addr);
 
+    /*
+    for (int i = 0; i < 20; i++) { 
+            Instruction instr = {0};
+            mem_read(i, &instr); 
+            printf("opcode : %u, arg: %d\n", instr.opcode, instr.arg); 
+    }
+    */
+
     CHECK_EQUAL((int)LOAD_OK, err);
 
 }
@@ -246,6 +254,15 @@ TEST(DiskTests, LoadProgramIf) {
     int addr = 4;
 
     load_status_t err = load_program(fname,addr);
+
+    /*
+    for (int i = 0; i < 20; i++) { 
+            Instruction instr = {0};
+            mem_read(i, &instr); 
+            printf("opcode : %u, arg: %d\n", instr.opcode, instr.arg); 
+    }
+    */
+    
 
     CHECK_EQUAL((int)LOAD_OK, err);
 }
