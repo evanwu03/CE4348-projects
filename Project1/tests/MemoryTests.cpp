@@ -1,6 +1,7 @@
 #include "CppUTest/TestHarness.h" 
 #include "../include/memory.h"
 #include "../include/disk.h"
+#include "../include/cpu.h"
 
 
 TEST_GROUP(MemoryTests)
@@ -266,3 +267,58 @@ TEST(DiskTests, LoadProgramIf) {
 
     CHECK_EQUAL((int)LOAD_OK, err);
 }
+
+
+TEST_GROUP(CpuTests) { 
+
+    void setup() {
+
+        //Init stuff
+        memset(memory, 0, sizeof(memory));
+        cpu_regs = {0};
+
+        const int NUM_INSTRUCTIONS = 9;
+        const int addr = 4;
+
+        // contents of program_add.txt 
+        int program[NUM_INSTRUCTIONS][MEM_FIELDS] = 
+        { [0] = {1, 18}, // load_const 18
+          [1] = {3, 0},  // move_to_mar
+          [2] = {1, 25}, // load_const 25
+          [3] = {4, 0},  // move_to_mbr
+          [4] = {1, 5},  // load_const 5
+          [5] = {8, 0},  // add 
+          [6] = {4, 0},  // move_to_mbr 
+          [7] = {7, 0},  // write_at_addr
+          [8] = {0, 0},  // exit
+        };
+
+        // Preload program into memory before tests
+        for (int i = addr, j = 0; j < NUM_INSTRUCTIONS && i < MEM_SIZE; i++, j++) { 
+            memory[i][OPCODE_IDX] = program[j][OPCODE_IDX];
+            memory[i][ARG_IDX]    = program[j][ARG_IDX];
+        }
+
+
+    }
+
+    void teardown() { 
+
+
+    }
+};
+
+TEST(CpuTests, FetchInstructionFromMemory) { 
+
+    // Check that the contents of IR0 and IR1 match load_const 5 (1,5) instruction 
+    int expected_opcode = 1;
+    int expected_arg    = 5;
+    int addr = 4; 
+
+    fetch_instruction(addr+4);
+
+
+    CHECK_EQUAL(expected_opcode, cpu_regs.IR0);
+    CHECK_EQUAL(expected_arg, cpu_regs.IR1);
+} 
+
