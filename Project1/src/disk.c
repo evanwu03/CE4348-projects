@@ -11,20 +11,20 @@ static const int BUF_SIZE = 256;
 
 static const InstructionInfo InstrTable[] =
     {
-        {"exit", EXIT, 0},
-        {"load_const", LOAD_CONST, 1},
-        {"move_from_mbr", MOV_FROM_MBR, 0},
-        {"move_from_mar", MOV_FROM_MAR, 0},
-        {"move_to_mbr", MOV_TO_MBR, 0},
-        {"move_to_mar", MOV_TO_MAR, 0},
-        {"load_at_addr", LOAD_AT_ADDR, 0},
-        {"write_at_addr", WRITE_AT_ADDR, 0},
-        {"add", ADD, 0},
-        {"multiply", MULT, 0},
-        {"and", AND, 0},
-        {"or", OR, 0},
-        {"ifgo", IFGO, 1},
-        {"sleep", SLEEP, 0},
+        [EXIT]          = {"exit", EXIT, 0},
+        [LOAD_CONST]    =  {"load_const", LOAD_CONST, 1},
+        [MOV_FROM_MBR]  = {"move_from_mbr", MOV_FROM_MBR, 0},
+        [MOV_FROM_MAR]  = {"move_from_mar", MOV_FROM_MAR, 0},
+        [MOV_TO_MBR]    = {"move_to_mbr", MOV_TO_MBR, 0},
+        [MOV_TO_MAR]    = {"move_to_mar", MOV_TO_MAR, 0},
+        [LOAD_AT_ADDR]  = {"load_at_addr", LOAD_AT_ADDR, 0},
+        [WRITE_AT_ADDR] = {"write_at_addr", WRITE_AT_ADDR, 0},
+        [ADD]           = {"add", ADD, 0},
+        [MULT]          = {"multiply", MULT, 0},
+        [AND]           = {"and", AND, 0},
+        [OR]            = {"or", OR, 0},
+        [IFGO]          = {"ifgo", IFGO, 1},
+        [SLEEP]         = {"sleep", SLEEP, 0},
 };
 
 // Opens program .txt file, translates instructions line by line and stores it in OS memory
