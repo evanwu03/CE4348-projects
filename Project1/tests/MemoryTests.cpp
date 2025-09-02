@@ -324,5 +324,5 @@ TEST(CpuTests, FetchInstructionFromMemory) {
 TEST(CpuTests, AddInstruction) { 
 
 
-
+ FAIL("Please Implement me");
 }
