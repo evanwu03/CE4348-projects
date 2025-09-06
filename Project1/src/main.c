@@ -15,15 +15,12 @@ int main()
 
     load_program(fname, addr);
 
+    // Execute program
     while (clock_cycle()) { }
 
-    //for (int i = 0; i < 20; i++) { 
-
-        
-    //}
-
-    Instruction res = {0};
-    mem_read(18, &res);
-
-    printf("Data at Memory[18]: %d\n", res.arg);
+    for (int i = 0; i < 20; i++) { 
+        Instruction res;
+        mem_read(i, &res);
+        printf("Data at Memory[%u]:\tOpcode:%u,\tArgument: %d\n", i, res.opcode, res.arg);
+    }
 }

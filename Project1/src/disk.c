@@ -99,6 +99,7 @@ translate_status_t translate(char *instruction, Instruction *outInstr)
 
     // If instruction is not found exit print error and exit program gracefully
     // Might not be the optimal way to do this, in future probably parse the program then keep log of all errors in program
+    // We should also check args of Ifgo is > 0
     if (!instrPtr)
     {
         fprintf(stderr, "Error: Unknown instruction %s\n", opcode);
