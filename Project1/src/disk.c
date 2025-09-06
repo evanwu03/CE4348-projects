@@ -63,7 +63,6 @@ load_status_t load_program(const char *fname, int addr)
 
         if (err != TR_OK)
         {
-
             // print other diagnostic info here probably
             return LOAD_ERR;
         }

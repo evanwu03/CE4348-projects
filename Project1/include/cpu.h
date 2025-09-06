@@ -36,8 +36,8 @@ int  mem_address(const int I_addr);
     sleep
 */
 
-static void exit() {} 
-static void load_const() {}
+static void exit() { } 
+static void load_const() { }
 static void move_from_mbr() {}
 static void move_from_mar() {}
 static void move_to_mbr() {}
