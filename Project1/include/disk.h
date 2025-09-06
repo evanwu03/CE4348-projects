@@ -25,7 +25,8 @@ typedef enum {
     AND,
     OR,
     IFGO,
-    SLEEP
+    SLEEP,
+    NUM_INSTRUCTIONS
 } opcode_t;
 
 

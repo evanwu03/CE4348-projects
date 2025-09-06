@@ -2,14 +2,14 @@
 // integer 3 being stored at memory
 // address 1
 //
-load_const 1
-move_to_mar
-load_const 25
-move_to_mbr
-load_const -22
-add
-ifgo 8
-load_const 10
-move_to_mbr
-write_at_addr
+load_const 1    // 4 AC = 1   
+move_to_mar     // 5 MAR = 1 
+load_const 25   // 6 AC = 25 
+move_to_mbr     // 7 MBR = 25 
+load_const -22  // 8 AC = -22  
+add             // 9 -22 + 25 = 3 -> AC 
+ifgo 8          // 10 
+load_const 10   // 11 Skip this statement
+move_to_mbr     // 12 MBR = 3
+write_at_addr   // 13 MEM[1] = 3
 exit

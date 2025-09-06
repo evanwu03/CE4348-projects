@@ -321,8 +321,219 @@ TEST(CpuTests, FetchInstructionFromMemory) {
     CHECK_EQUAL(expected_arg, cpu_regs.IR1);
 } 
 
-TEST(CpuTests, AddInstruction) { 
+TEST_GROUP(InstructionTests) { 
+
+    void setup() {
+
+        //Init stuff
+        memset(memory, 0, sizeof(memory));
+        cpu_regs = {0};
+
+    }
+
+    void teardown() { 
 
 
- FAIL("Please Implement me");
+    }
+};
+
+TEST(InstructionTests, ExitProgram) { 
+
+    // Load the exit instruction into cpu registers
+    cpu_regs.IR1 = 0;
+    cpu_regs.IR0 = 0; 
+
+    execute_instruction();
+
+    CHECK_EQUAL(false, running);
 }
+
+TEST(InstructionTests, LoadConstant) { 
+
+    // Preload load_const 
+    cpu_regs.IR0 = 1;
+    cpu_regs.IR1 = 100;
+    
+    execute_instruction();
+
+    CHECK_EQUAL(cpu_regs.IR1, cpu_regs.AC);
+}
+
+TEST(InstructionTests, MoveFromMBR) { 
+
+    // Preload move_from_mbr 
+    cpu_regs.IR0 = 2;
+    cpu_regs.IR1 = 0;
+    cpu_regs.MBR = 1000;
+    
+    execute_instruction();
+
+    // AC = MBR = 1000
+    CHECK_EQUAL(cpu_regs.MBR, cpu_regs.AC);
+}
+
+TEST(InstructionTests, MoveFromMAR) { 
+
+    // Preload move_from_mar
+    cpu_regs.IR0 = 3;
+    cpu_regs.IR1 = 0;
+    cpu_regs.MBR = 20;
+    
+    execute_instruction();
+
+    // AC = MAR = 20
+    CHECK_EQUAL(cpu_regs.MAR, cpu_regs.AC);
+}
+
+TEST(InstructionTests, MoveToMBR) { 
+
+    // Preload move_to_mbr
+    cpu_regs.IR0 = 4;
+    cpu_regs.IR1 = 0;
+    cpu_regs.AC  = 155;
+    
+    execute_instruction();
+
+    // MBR <- AC = 155
+    CHECK_EQUAL(cpu_regs.AC, cpu_regs.MBR);
+}
+
+TEST(InstructionTests, MoveToMAR) { 
+
+    // Preload move_to_mar
+    cpu_regs.IR0 = 5;
+    cpu_regs.IR1 = 0;
+    cpu_regs.AC  = 300;
+    
+    execute_instruction();
+
+    // MAR <- AC = 300
+    CHECK_EQUAL(cpu_regs.AC, cpu_regs.MAR);
+}
+
+TEST(InstructionTests, LoadAtAddr) { 
+
+    // Preload load_at_addr
+    cpu_regs.IR0  = 6;
+    cpu_regs.IR1  = 0;
+    cpu_regs.MAR  = 300;
+
+    memory[300][1] = 1500;
+    
+    execute_instruction();
+
+    // MBR <- MEM[300] = 1500
+    CHECK_EQUAL(memory[300][1], cpu_regs.MBR);
+}
+
+TEST(InstructionTests, WriteAtAddr) { 
+
+    // Preload write_at_addr
+    cpu_regs.IR0  = 7;
+    cpu_regs.IR1  = 0;
+    cpu_regs.MAR  = 1023;
+    cpu_regs.MBR  = 1500;
+    
+    execute_instruction();
+
+    // MBR -> MEM[300] = 1500
+    CHECK_EQUAL(cpu_regs.MBR, memory[1023][1]);
+}
+
+TEST(InstructionTests, Add) { 
+
+    // Preload add
+    cpu_regs.IR0  = 8;
+    cpu_regs.IR1  = 0;
+    cpu_regs.MBR  = 2;
+    cpu_regs.AC   = 2;
+    
+    execute_instruction();
+
+    // AC+MBR = 4  2+2 
+    CHECK_EQUAL(4, cpu_regs.AC);
+}
+
+TEST(InstructionTests, Multiply) { 
+
+    // Preload multiply
+    cpu_regs.IR0  = 9;
+    cpu_regs.IR1  = 0;
+    cpu_regs.MBR  = 4;
+    cpu_regs.AC   = 4;
+    
+    execute_instruction();
+
+    // AC*MBR = 16  4*4 = 16
+    CHECK_EQUAL(16, cpu_regs.AC);
+}
+
+TEST(InstructionTests, AndFalse) { 
+
+    // Preload and
+    cpu_regs.IR0  = 10;
+    cpu_regs.IR1  = 0;
+    cpu_regs.MBR  = 1;
+    cpu_regs.AC   = 0;
+    
+    execute_instruction();
+
+    // AC*MBR =  0 1 && 0 = 0
+    CHECK_EQUAL(false, cpu_regs.AC);
+}
+
+TEST(InstructionTests, AndTrue) { 
+
+    // Preload and
+    cpu_regs.IR0  = 10;
+    cpu_regs.IR1  = 0;
+    cpu_regs.MBR  = 12;
+    cpu_regs.AC   = 1;
+    
+    execute_instruction();
+
+    // AC*MBR =  0 12 && 1 = 0 
+    // This pasts as long as AC and MBR are nonzero
+    CHECK_EQUAL(true, cpu_regs.AC);
+}
+
+TEST(InstructionTests, OrFalse) { 
+
+    // Preload move_to_mbr
+    cpu_regs.IR0  = 11;
+    cpu_regs.IR1  = 0;
+    cpu_regs.MBR  = 0;
+    cpu_regs.AC   = 0;
+    
+    execute_instruction();
+    
+    CHECK_EQUAL(false, cpu_regs.AC);
+}
+
+TEST(InstructionTests, OrTrue) { 
+
+    // Preload move_to_mbr
+    cpu_regs.IR0  = 11;
+    cpu_regs.IR1  = 0;
+    cpu_regs.MBR  = 0;
+    cpu_regs.AC   = 1;
+    
+    execute_instruction();
+
+    CHECK_EQUAL(true, cpu_regs.AC);
+}
+
+TEST(InstructionTests, IfGoValid) { 
+
+    // Preload move_to_mbr
+    cpu_regs.IR0  = 12;
+    cpu_regs.IR1  = 8; 
+    cpu_regs.AC   = 1;
+    cpu_regs.PC   = 6;
+    cpu_regs.Base = 4;
+    
+    execute_instruction();
+
+    CHECK_EQUAL((cpu_regs.IR1-1), cpu_regs.PC);
+}
+

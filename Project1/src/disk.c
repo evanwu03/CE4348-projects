@@ -9,7 +9,7 @@
 
 static const int BUF_SIZE = 256;
 
-static const InstructionInfo InstrTable[] =
+static const InstructionInfo InstrTable[NUM_INSTRUCTIONS] =
     {
         [EXIT]          = {"exit", EXIT, 0},
         [LOAD_CONST]    =  {"load_const", LOAD_CONST, 1},
