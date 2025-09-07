@@ -7,6 +7,10 @@
 #include "../include/disk.h"
 #include "../include/memory.h"
 
+// Forward Declaration
+static bool string_is_number(const char *str);
+
+
 static const int BUF_SIZE = 256;
 
 static const InstructionInfo InstrTable[NUM_INSTRUCTIONS] =
@@ -138,6 +142,7 @@ translate_status_t translate(char *instruction, Instruction *outInstr)
 
     return TR_OK;
 }
+
 
 static bool string_is_number(const char *str)
 {

@@ -2,6 +2,26 @@
 #include "../include/memory.h"
 #include "../include/disk.h"
 
+// Forward Declarations
+static void exit();
+static void load_const();
+static void move_from_mbr();
+static void move_from_mar();
+static void move_to_mbr();
+static void move_to_mar();
+static void load_at_addr();
+static void write_at_addr();
+static void add();
+static void multiply();
+static void and_op();
+static void or_op();
+static void ifgo();
+static void sleep();
+
+static int  mem_address(const int I_addr); 
+
+
+
 cpu_regs_t cpu_regs;
 
 //static const int NUM_INSTRUCTIONS = 14;

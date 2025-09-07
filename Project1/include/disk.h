@@ -45,6 +45,6 @@ typedef enum{
 
 load_status_t load_program(const char* fname, int addr); 
 translate_status_t  translate(char* instruction, Instruction* outInstr);
-static bool string_is_number(const char* str);
+//static bool string_is_number(const char* str);
 
 #endif //DISK_H 

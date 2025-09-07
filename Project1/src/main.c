@@ -1,7 +1,8 @@
 
 #include "../include/cpu.h"
 #include "../include/disk.h"
-#include "string.h"
+#include <string.h>
+#include <stdio.h>
 
 const char fname[] = "../tests/programs/program_add.txt";
 
