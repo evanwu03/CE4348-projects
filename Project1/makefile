@@ -1,22 +1,15 @@
-CC = g++
-CPPUTEST_HOME = /usr/share/cpputest
+CC = gcc
 
-CFLAGS   = -Wall -g -I../include
-CPPFLAGS = -I$(CPPUTEST_HOME)/include 
+CFLAGS   = -Wall -g -I/include
 
-LDLIBS   = -L$(CPPUTEST_HOME)/lib -lCppUTest -lCppUTestExt
-
-# Test sources (C++)
-TEST_SRCS = AllTests.cpp MemoryTests.cpp
 # Production sources (C)
-SRC_SRCS  = ../src/memory.c ../src/disk.c ../src/cpu.c
+SRC_SRCS  = src/*.c
 
 # Objects
-TEST_OBJS = $(TEST_SRCS:%.cpp=build/%.o)
 SRC_OBJS  = $(SRC_SRCS:../src/%.c=build/%.o)
 
-OBJS = $(TEST_OBJS) $(SRC_OBJS)
-TARGET_NAME = AllTests
+OBJS = $(SRC_OBJS)
+TARGET_NAME = project1
 TARGET = build/$(TARGET_NAME)
 
 .PHONY: all clean run
